@@ -150,7 +150,8 @@ function configureBookingDatePicker(selectedClass) {
                     }
                 }
             }
-        }).open();
+        });
+        datepicker.setDate(startDate, true)
     }
 }
 
