@@ -127,11 +127,13 @@ document.getElementById('class-select').onchange = function() {
 };
 
 // Function to configure the booking date picker with selectable and highlighted dates
+// Function to configure the booking date picker with selectable and highlighted dates
 function configureBookingDatePicker(selectedClass) {
     if (selectedClass && classes[selectedClass.toLowerCase()]) {
         const { startDate, endDate } = classes[selectedClass.toLowerCase()];
-        
-        flatpickr("#date-picker", {
+
+        // Capture the flatpickr instance in a variable
+        const datepicker = flatpickr("#date-picker", {
             dateFormat: "Y-m-d",
             minDate: startDate,
             maxDate: endDate,
@@ -139,21 +141,32 @@ function configureBookingDatePicker(selectedClass) {
                 const dayDate = dayElem.dateObj;
                 const start = new Date(startDate);
                 const end = new Date(endDate);
-                
+
                 if (dayDate >= start && dayDate <= end) {
                     dayElem.classList.add("highlight-date");
                     dayElem.style.backgroundColor = "#b0e0e6";
                     
+                    // Explicitly style the start date to avoid override
                     if (dayDate.getTime() === start.getTime()) {
                         dayElem.style.backgroundColor = "#87ceeb";
                         dayElem.style.fontWeight = "bold";
+                        dayElem.classList.add("start-date-highlight"); // Add a custom class for extra specificity
                     }
                 }
             }
         });
-        datepicker.setDate(startDate, true)
+
+        // Set the start date to be initially selected and explicitly apply style
+        datepicker.setDate(startDate, true);
+        
+        // Ensure start date background color is enforced even when selected
+        const startElem = document.querySelector(".flatpickr-day.selected.start-date-highlight");
+        if (startElem) {
+            startElem.style.backgroundColor = "#87ceeb";
+        }
     }
 }
+
 
 // Event listener for booking a class with validations
 document.getElementById('booking-form').onsubmit = function(event) {
