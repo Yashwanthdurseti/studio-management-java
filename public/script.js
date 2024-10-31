@@ -36,8 +36,7 @@ flatpickr("#start-date", {
     dateFormat: "Y-m-d",
     onChange: function(selectedDates, dateStr) {
         flatpickr("#end-date", {
-            dateFormat: "Y-m-d",
-            //minDate: dateStr
+            dateFormat: "Y-m-d"
         });
     }
 });
@@ -127,35 +126,39 @@ document.getElementById('class-select').onchange = function() {
 };
 
 // Function to configure the booking date picker with selectable and highlighted dates
-
+// Function to configure the booking date picker with selectable and highlighted dates
 function configureBookingDatePicker(selectedClass) {
     if (selectedClass && classes[selectedClass.toLowerCase()]) {
         const { startDate, endDate } = classes[selectedClass.toLowerCase()];
+
+        // Filter dates based on the selected class
+        const availableDates = [startDate, endDate]; // Extend this as needed
 
         flatpickr("#date-picker", {
             dateFormat: "Y-m-d",
             minDate: startDate,
             maxDate: endDate,
+            allowInput: true,
             onDayCreate: function(dObj, dStr, fp, dayElem) {
-                const dayDate = dayElem.dateObj;
-                const start = new Date(startDate);
-                const end = new Date(endDate);
+                const formattedDate = formatDate(dayElem.dateObj);
 
-                if (dayDate >= start && dayDate <= end) {
+                if (availableDates.includes(formattedDate)) {
                     dayElem.classList.add("highlight-date");
-                    dayElem.style.backgroundColor = "#b0e0e6";
-
-                    // Explicitly highlight the start date without selecting it
-                    if (dayDate.getTime() === start.getTime()) {
-                        dayElem.style.backgroundColor = "#87ceeb";
-                        dayElem.style.fontWeight = "bold";
-                    }
+                    dayElem.style.backgroundColor = "#87ceeb";
+                    dayElem.style.fontWeight = "bold";
                 }
             }
         });
     }
 }
 
+// Helper function to format dates as "YYYY-MM-DD"
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
 
 // Event listener for booking a class with validations
