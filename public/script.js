@@ -23,6 +23,15 @@ function loadClassesFromBackend() {
         .catch(error => console.error('Error loading classes:', error));
 }
 
+// Debounce function to limit frequent triggering
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
 // Validation function to show a modal with a custom message
 function showValidationModal(message) {
     document.getElementById('modal-title').innerText = "Validation Error";
@@ -52,8 +61,11 @@ function addClassToDropdown(name, startDate, endDate) {
 }
 
 // Event listener for creating a new class with all validations
-document.getElementById('create-class-form').onsubmit = function(event) {
+document.getElementById('create-class-form').onsubmit = debounce(function(event) {
     event.preventDefault();
+    const createButton = event.target.querySelector("button[type='submit']");
+    createButton.disabled = true; // Temporarily disable the button
+
     const name = document.getElementById('class-name').value.trim();
     const normalizedClassName = name.toLowerCase();
     const startDate = document.getElementById('start-date').value;
@@ -64,6 +76,7 @@ document.getElementById('create-class-form').onsubmit = function(event) {
     // Validate capacity
     if (capacity <= 0 || isNaN(capacity)) {
         showValidationModal("Capacity must be greater than 0.");
+        createButton.disabled = false;
         return;
     }
 
@@ -71,24 +84,28 @@ document.getElementById('create-class-form').onsubmit = function(event) {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(name)) {
         showValidationModal("Please enter a valid Class Name (only letters and spaces allowed).");
+        createButton.disabled = false;
         return;
     }
 
     // Check if class name already exists (case-insensitive)
     if (classes[normalizedClassName]) {
         showValidationModal("Class Name already exists.");
+        createButton.disabled = false;
         return;
     }
 
     // Validate start date against today’s date
     if (startDate < today) {
         showValidationModal("The start date should be either today or a future day, not a past day.");
+        createButton.disabled = false;
         return;
     }
 
     // Validate end date against start date
     if (endDate < startDate) {
         showValidationModal("Invalid Date - End date must be the same as or after the start date.");
+        createButton.disabled = false;
         return;
     }
 
@@ -113,8 +130,11 @@ document.getElementById('create-class-form').onsubmit = function(event) {
         addClassToDropdown(name, startDate, endDate);
         loadClassesFromBackend(); // Reload classes to update the list
         document.getElementById('create-class-form').reset();
+    })
+    .finally(() => {
+        createButton.disabled = false; // Re-enable the button after process completes
     });
-};
+}, 1000); // Set debounce delay to 1 second
 
 // Load classes from the backend on page load
 document.addEventListener('DOMContentLoaded', loadClassesFromBackend);
@@ -125,7 +145,6 @@ document.getElementById('class-select').onchange = function() {
     configureBookingDatePicker(selectedClass);
 };
 
-// Function to configure the booking date picker with selectable and highlighted dates
 // Function to configure the booking date picker with selectable and highlighted dates
 function configureBookingDatePicker(selectedClass) {
     if (selectedClass && classes[selectedClass.toLowerCase()]) {
