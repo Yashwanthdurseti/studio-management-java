@@ -131,8 +131,8 @@ function configureBookingDatePicker(selectedClass) {
     if (selectedClass && classes[selectedClass.toLowerCase()]) {
         const { startDate, endDate } = classes[selectedClass.toLowerCase()];
 
-        // Filter dates based on the selected class
-        const availableDates = [startDate, endDate]; // Extend this as needed
+        // Generate all dates between startDate and endDate
+        const availableDates = getAllDatesInRange(startDate, endDate);
 
         flatpickr("#date-picker", {
             dateFormat: "Y-m-d",
@@ -150,6 +150,28 @@ function configureBookingDatePicker(selectedClass) {
             }
         });
     }
+}
+
+// Helper function to format dates as "YYYY-MM-DD"
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// Helper function to generate all dates between two dates
+function getAllDatesInRange(start, end) {
+    const dates = [];
+    let currentDate = new Date(start);
+    const endDate = new Date(end);
+
+    while (currentDate <= endDate) {
+        dates.push(formatDate(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+    }
+
+    return dates;
 }
 
 // Helper function to format dates as "YYYY-MM-DD"
