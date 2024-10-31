@@ -2,8 +2,12 @@ document.addEventListener('DOMContentLoaded', function () {
     loadClasses();
     loadBookings();
 
-    // Event listener for the class dropdown to trigger date filtering
-    document.getElementById('class-filter').onchange = updateDateFilter;
+    // Event listeners for dropdowns to trigger filtering
+    document.getElementById('class-filter').onchange = function() {
+        updateDateFilter();
+        filterBookings(); // Ensure table updates when class is selected
+    };
+    document.getElementById('date-filter').onchange = filterBookings;
 });
 
 // Load classes and populate the accordion and class filter
@@ -14,7 +18,7 @@ function loadClasses() {
         const classesContainer = document.getElementById('classes-container');
         const classFilter = document.getElementById('class-filter');
         
-        // Clear existing content to prevent duplicates
+        // Clear existing content in container and filter dropdown to prevent duplicates
         classesContainer.innerHTML = '';
         classFilter.innerHTML = '<option value="">All Classes</option>';
         
@@ -48,15 +52,21 @@ function loadClasses() {
     .catch(error => console.error('Error loading classes:', error));
 }
 
-// Load bookings and populate the bookings table
+// Load bookings and populate the bookings table and date filter dropdown
 function loadBookings() {
     fetch('/bookings')
     .then(response => response.json())
     .then(data => {
         const bookingsTableBody = document.getElementById('bookings-table-body');
-        bookingsTableBody.innerHTML = ''; // Clear existing rows
+        
+        // Clear any existing table rows
+        bookingsTableBody.innerHTML = '';
 
+        // Populate bookings table and gather unique dates for the date filter dropdown
+        const uniqueDates = new Set();
         data.forEach(booking => {
+            uniqueDates.add(booking.date); // Collect unique dates
+            
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${booking.memberName || "Unknown Member"}</td>
@@ -66,42 +76,46 @@ function loadBookings() {
             bookingsTableBody.appendChild(row);
         });
 
-        // Store the bookings data globally for easy filtering
-        window.bookingsData = data;
+        // Populate date filter dropdown
+        const dateFilter = document.getElementById('date-filter');
+        dateFilter.innerHTML = '<option value="">All Dates</option>'; // Reset date filter options
+        uniqueDates.forEach(date => {
+            const option = document.createElement('option');
+            option.value = date;
+            option.text = date;
+            dateFilter.appendChild(option);
+        });
     })
     .catch(error => console.error('Error loading bookings:', error));
 }
 
-// Function to update the date dropdown based on selected class
+// Update date filter dropdown based on the selected class
 function updateDateFilter() {
     const selectedClass = document.getElementById('class-filter').value;
     const dateFilter = document.getElementById('date-filter');
+    dateFilter.innerHTML = '<option value="">All Dates</option>'; // Reset date options
 
-    // Clear the date filter options
-    dateFilter.innerHTML = '<option value="">All Dates</option>';
+    // Fetch bookings and filter dates for the selected class
+    fetch('/bookings')
+    .then(response => response.json())
+    .then(data => {
+        const uniqueDates = new Set();
+        data.forEach(booking => {
+            if (selectedClass === "" || booking.className === selectedClass) {
+                uniqueDates.add(booking.date); // Collect dates for the selected class
+            }
+        });
 
-    if (selectedClass === '') {
-        // If no class is selected, show no specific dates
-        return;
-    }
-
-    // Filter bookings to get dates only for the selected class
-    const filteredDates = [...new Set(window.bookingsData
-        .filter(booking => booking.className === selectedClass)
-        .map(booking => booking.date)
-    )];
-
-    // Populate the date dropdown with the filtered dates
-    filteredDates.forEach(date => {
-        const option = document.createElement('option');
-        option.value = date;
-        option.text = date;
-        dateFilter.appendChild(option);
-    });
+        // Populate the date dropdown with filtered dates
+        uniqueDates.forEach(date => {
+            const option = document.createElement('option');
+            option.value = date;
+            option.text = date;
+            dateFilter.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Error updating date filter:', error));
 }
-
-// Event listener for date dropdown
-document.getElementById('date-filter').onchange = filterBookings;
 
 // Filter bookings based on selected class and date
 function filterBookings() {
@@ -109,24 +123,29 @@ function filterBookings() {
     const selectedDate = document.getElementById('date-filter').value;
     const bookingsTableBody = document.getElementById('bookings-table-body');
 
-    // Clear existing rows in the table
+    // Clear existing rows in the table before populating
     bookingsTableBody.innerHTML = '';
 
-    // Filter bookings based on selected class and date
-    const filteredBookings = window.bookingsData.filter(booking => {
-        const matchClass = selectedClass === '' || booking.className === selectedClass;
-        const matchDate = selectedDate === '' || booking.date === selectedDate;
-        return matchClass && matchDate;
-    });
+    // Fetch bookings and apply filters
+    fetch('/bookings')
+    .then(response => response.json())
+    .then(data => {
+        const filteredBookings = data.filter(booking => {
+            const matchClass = selectedClass === '' || booking.className === selectedClass;
+            const matchDate = selectedDate === '' || booking.date === selectedDate;
+            return matchClass && matchDate;
+        });
 
-    // Populate table with filtered bookings
-    filteredBookings.forEach(booking => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${booking.memberName || "Unknown Member"}</td>
-            <td>${booking.className || "Unknown Class"}</td>
-            <td>${booking.date || "No Date"}</td>
-        `;
-        bookingsTableBody.appendChild(row);
-    });
+        // Populate table with filtered bookings
+        filteredBookings.forEach(booking => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${booking.memberName || "Unknown Member"}</td>
+                <td>${booking.className || "Unknown Class"}</td>
+                <td>${booking.date || "No Date"}</td>
+            `;
+            bookingsTableBody.appendChild(row);
+        });
+    })
+    .catch(error => console.error('Error filtering bookings:', error));
 }
