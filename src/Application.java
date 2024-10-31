@@ -13,13 +13,16 @@ import java.util.List;
 
 public class Application {
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8000"));
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+       // HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/classes", new ClassHandler());
         server.createContext("/bookings", new BookingHandler());
         server.createContext("/", new StaticFileHandler()); // Serve static files from root
         server.setExecutor(null); // creates a default executor
         server.start();
-        System.out.println("Server is running on http://localhost:8000");
+        System.out.println("Server is running on port " + port);
+        //System.out.println("Server is running on http://localhost:8000");
         System.out.println("Current Working Directory: " + new File(".").getAbsolutePath());
     }
 
