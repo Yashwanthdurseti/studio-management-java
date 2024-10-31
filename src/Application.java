@@ -107,7 +107,11 @@ public class Application {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String uri = exchange.getRequestURI().toString();
-            String filePath = "./public" + uri; // Adjust path to point to public folder
+
+            String rootDir = new File("public").getAbsolutePath(); // Get absolute path to public folder
+            String filePath = rootDir + uri; // Construct file path
+    
+           // String filePath = "./public" + uri; // Adjust path to point to public folder
 
             System.out.println("Requested URI: " + uri);
             System.out.println("File path: " + filePath);
