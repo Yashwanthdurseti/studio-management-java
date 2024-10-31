@@ -37,7 +37,7 @@ flatpickr("#start-date", {
     onChange: function(selectedDates, dateStr) {
         flatpickr("#end-date", {
             dateFormat: "Y-m-d",
-            minDate: dateStr
+            //minDate: dateStr
         });
     }
 });
