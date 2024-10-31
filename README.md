@@ -2,6 +2,7 @@
 
 A web application to manage studio classes, bookings, and user interactions, built with a Java backend and JavaScript frontend. The project allows users to create fitness classes, book available sessions, and view all class details.
 
+Live Application link : https://studio-management-java-6cd114f86749.herokuapp.com/
 
 **Features:**
 
