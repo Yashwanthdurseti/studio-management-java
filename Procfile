@@ -1,1 +1,1 @@
-web: java -cp ".:lib/*" src.Application
+web: java -cp lib/*:src Application
