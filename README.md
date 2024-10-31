@@ -15,10 +15,10 @@ A web application to manage studio classes, bookings, and user interactions, bui
 
 **Technologies Used:**
 
-Frontend: HTML, CSS, JavaScript, Flatpickr for date selection, and Bootstrap for UI styling.
-Backend: Java using the Java HTTP Server.
-Testing: Cypress for end-to-end and API testing.
-Deployment: Hosted on Heroku.
+**Frontend:** HTML, CSS, JavaScript, Flatpickr for date selection, and Bootstrap for UI styling.
+**Backend:** Java using the Java HTTP Server.
+**Testing:** Cypress for end-to-end and API testing.
+**Deployment:** Hosted on Heroku.
 
 
 **Setup and Installation**
