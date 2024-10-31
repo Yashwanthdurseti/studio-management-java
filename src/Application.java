@@ -22,7 +22,6 @@ public class Application {
         server.setExecutor(null); // creates a default executor
         server.start();
         System.out.println("Server is running on port " + port);
-        //System.out.println("Server is running on http://localhost:8000");
         System.out.println("Current Working Directory: " + new File(".").getAbsolutePath());
     }
 
