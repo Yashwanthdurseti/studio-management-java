@@ -23,15 +23,6 @@ function loadClassesFromBackend() {
         .catch(error => console.error('Error loading classes:', error));
 }
 
-// Debounce function to limit frequent triggering
-function debounce(func, delay) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
 // Validation function to show a modal with a custom message
 function showValidationModal(message) {
     document.getElementById('modal-title').innerText = "Validation Error";
@@ -61,10 +52,10 @@ function addClassToDropdown(name, startDate, endDate) {
 }
 
 // Event listener for creating a new class with all validations
-document.getElementById('create-class-form').onsubmit = debounce(function(event) {
+document.getElementById('create-class-form').onsubmit = function(event) {
     event.preventDefault();
     const createButton = event.target.querySelector("button[type='submit']");
-    createButton.disabled = true; // Temporarily disable the button
+    createButton.disabled = true; // Disable the button
 
     const name = document.getElementById('class-name').value.trim();
     const normalizedClassName = name.toLowerCase();
@@ -134,7 +125,7 @@ document.getElementById('create-class-form').onsubmit = debounce(function(event)
     .finally(() => {
         createButton.disabled = false; // Re-enable the button after process completes
     });
-}, 1000); // Set debounce delay to 1 second
+};
 
 // Load classes from the backend on page load
 document.addEventListener('DOMContentLoaded', loadClassesFromBackend);
