@@ -1,4 +1,4 @@
-                                                                                     Studio Management Application
+                                      Studio Management Application
 
 A web application to manage studio classes, bookings, and user interactions, built with a Java backend and JavaScript frontend. The project allows users to create fitness classes, book available sessions, and view all class details.
 
@@ -48,9 +48,3 @@ Retrieve Classes: GET /classes
 Create Booking: POST /bookings
 Retrieve Bookings: GET /bookings
 
-
-API Documentation
-Create Class: POST /classes
-Retrieve Classes: GET /classes
-Create Booking: POST /bookings
-Retrieve Bookings: GET /bookings
