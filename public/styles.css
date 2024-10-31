@@ -168,3 +168,27 @@ input, select {
     border-radius: 50%;
     font-weight: bold;
 }
+/* Custom styling for the "View All Details" button */
+
+#view-details {
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #333333; /* Charcoal color */
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+#view-details:hover {
+    background-color: #1f1f1f; /* Slightly darker on hover */
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+#view-details:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.4);
+}
