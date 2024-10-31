@@ -196,6 +196,9 @@ function formatDate(date) {
 // Event listener for booking a class with validations
 document.getElementById('booking-form').onsubmit = function(event) {
     event.preventDefault();
+    const bookButton = event.target.querySelector("button[type='submit']");
+    bookButton.disabled = true; // Disable the button
+
     const memberName = document.getElementById('member-name').value.trim();
     const bookingDate = document.getElementById('date-picker').value;
     const className = document.getElementById('class-select').value;
@@ -203,16 +206,19 @@ document.getElementById('booking-form').onsubmit = function(event) {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(memberName)) {
         showValidationModal("Please enter a valid Name (only letters and spaces allowed).");
+        bookButton.disabled = false;
         return;
     }
 
     if (!className) {
         showValidationModal("Please select a class to book.");
+        bookButton.disabled = false;
         return;
     }
 
     if (!bookingDate) {
         showValidationModal("Please select a booking date.");
+        bookButton.disabled = false;
         return;
     }
 
@@ -235,6 +241,9 @@ document.getElementById('booking-form').onsubmit = function(event) {
 
         document.getElementById('booking-form').reset();
         document.getElementById('date-picker')._flatpickr.clear();
+    })
+    .finally(() => {
+        bookButton.disabled = false; // Re-enable the button after process completes
     });
 };
 
