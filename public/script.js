@@ -127,13 +127,12 @@ document.getElementById('class-select').onchange = function() {
 };
 
 // Function to configure the booking date picker with selectable and highlighted dates
-// Function to configure the booking date picker with selectable and highlighted dates
+
 function configureBookingDatePicker(selectedClass) {
     if (selectedClass && classes[selectedClass.toLowerCase()]) {
         const { startDate, endDate } = classes[selectedClass.toLowerCase()];
 
-        // Capture the flatpickr instance in a variable
-        const datepicker = flatpickr("#date-picker", {
+        flatpickr("#date-picker", {
             dateFormat: "Y-m-d",
             minDate: startDate,
             maxDate: endDate,
@@ -145,27 +144,18 @@ function configureBookingDatePicker(selectedClass) {
                 if (dayDate >= start && dayDate <= end) {
                     dayElem.classList.add("highlight-date");
                     dayElem.style.backgroundColor = "#b0e0e6";
-                    
-                    // Explicitly style the start date to avoid override
+
+                    // Explicitly highlight the start date without selecting it
                     if (dayDate.getTime() === start.getTime()) {
                         dayElem.style.backgroundColor = "#87ceeb";
                         dayElem.style.fontWeight = "bold";
-                        dayElem.classList.add("start-date-highlight"); // Add a custom class for extra specificity
                     }
                 }
             }
         });
-
-        // Set the start date to be initially selected and explicitly apply style
-        datepicker.setDate(startDate, true);
-        
-        // Ensure start date background color is enforced even when selected
-        const startElem = document.querySelector(".flatpickr-day.selected.start-date-highlight");
-        if (startElem) {
-            startElem.style.backgroundColor = "#87ceeb";
-        }
     }
 }
+
 
 
 // Event listener for booking a class with validations
