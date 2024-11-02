@@ -5,18 +5,24 @@ describe('Book a Class', () => {
     });
 
     it('should book a class and display a success modal', () => {
+        // Define the target booking date
+        const bookingDate = '2024-12-07'; // Set December 5, 2024, directly
+
         // Select "Book Class" section
         cy.get('#class-select').select('Yoga Class');
-        cy.get('#date-picker').type('2024-11-05', { force: true });
+        
+        // Set the booking date directly in the date input field
+        cy.get('#date-picker').invoke('val', bookingDate);
+
+        // Fill in the rest of the form
         cy.get('#member-name').type('Dermot Herlihy');
 
-        // Click on "Book Class" button
+        // Submit the booking form
         cy.get('#booking-form button[type="submit"]').click();
 
         // Check that the success modal pops up
         cy.get('#success-modal').should('be.visible');
         cy.get('#modal-title').should('have.text', 'Booking Successful');
-        // cy.get('#modal-message').should('contain', 'Your booking was successful!'); // Verify content if needed
 
         // Close the modal
         cy.get('#success-modal').within(() => {
