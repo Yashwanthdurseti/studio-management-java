@@ -20,11 +20,13 @@ jobs:
         java-version: '11'
         distribution: 'temurin'  # Specify distribution (e.g., temurin, zulu, adopt, etc.)
 
-    - name: Build with Gradle/Maven
-      run: ./gradlew build  # Or use `mvn install` if using Maven
+    - name: Navigate to app directory and Build with Gradle
+      working-directory: app  # Sets the app directory as the working directory
+      run: ./gradlew build  # Run Gradle build inside the app directory
 
     - name: Run Java Tests
-      run: ./gradlew test  # Or use `mvn test` if using Maven
+      working-directory: app
+      run: ./gradlew test  # Run Gradle tests inside the app directory
 
   cypress:
     runs-on: ubuntu-latest
