@@ -41,5 +41,15 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Verify Cypress Installation
+      run: npx cypress verify
+
     - name: Run Cypress Tests
-      run: npx cypress run
+      run: npx cypress run --browser chrome --headless
+
+    - name: Archive Cypress Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-results
+        path: cypress/videos
