@@ -18,6 +18,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
+        distribution: 'temurin'  # Specify distribution (e.g., temurin, zulu, adopt, etc.)
 
     - name: Build with Gradle/Maven
       run: ./gradlew build  # Or use `mvn install` if using Maven
