@@ -4,6 +4,9 @@ A web application to manage studio classes, bookings, and user interactions, bui
 
 Live Application link : https://studio-management-java-6cd114f86749.herokuapp.com/
 
+**CI/CD Integration:**
+This project includes a CI/CD pipeline configured with GitHub Actions, automating the build, testing, and deployment processes. The workflow uses **Gradle** for building the Java backend, **Node.js** setup for the frontend, and **Cypress** for running end-to-end tests. Automated test cases ensure that critical functionalities are validated, including class creation, duplicate validation, and booking flows.
+
 **Features:**
 
 **Create and Manage Classes:** Admins can create classes with specific names, capacities, start and end dates.
