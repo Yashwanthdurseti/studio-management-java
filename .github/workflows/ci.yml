@@ -1,4 +1,4 @@
-name: Java CI
+name: Java CI with Cypress
 
 on:
   push:
@@ -20,14 +20,26 @@ jobs:
         java-version: '11'
 
     - name: Build with Gradle/Maven
-      run: ./gradlew build  # Change to `mvn install` if using Maven instead of Gradle
+      run: ./gradlew build  # Or use `mvn install` if using Maven
 
-    - name: Run tests
-      run: ./gradlew test  # Change to `mvn test` if using Maven
+    - name: Run Java Tests
+      run: ./gradlew test  # Or use `mvn test` if using Maven
 
-    - name: Archive test results
-      if: always()
-      uses: actions/upload-artifact@v3
+  cypress:
+    runs-on: ubuntu-latest
+    needs: build  # Ensures Cypress tests only run if the Java build and tests pass
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        name: test-results
-        path: build/test-results/test/  # Adjust path if needed for Maven or Gradle
+        node-version: '16'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run Cypress Tests
+      run: npx cypress run
