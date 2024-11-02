@@ -18,19 +18,17 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin'  # Specify distribution (e.g., temurin, zulu, adopt, etc.)
+        distribution: 'temurin'
 
-    - name: Navigate to app directory and Build with Gradle
-      working-directory: app  # Sets the app directory as the working directory
-      run: ./gradlew build  # Run Gradle build inside the app directory
+    - name: Build with Gradle
+      run: ./gradlew build
 
     - name: Run Java Tests
-      working-directory: app
-      run: ./gradlew test  # Run Gradle tests inside the app directory
+      run: ./gradlew test
 
   cypress:
     runs-on: ubuntu-latest
-    needs: build  # Ensures Cypress tests only run if the Java build and tests pass
+    needs: build
 
     steps:
     - name: Check out repository
